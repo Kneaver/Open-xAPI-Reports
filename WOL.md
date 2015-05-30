@@ -304,3 +304,55 @@ let's use the trick below on object and see how to fix it in Step 5
 
 <td><%-ActivityName%></td>
 
+---
+
+Step 5 better extraction of Statement data
+
+While xAPI statement follow a certain formalism for assuring a certain level of durability and consistency most reporting apps will be concerned to display meaningful information. How to find a get predictable and uniform data ? Honestly I don't know. I go as far as thinking that xAPI is not yet fully mature on this point. This is the reason th amotivate my to accept the invitation I received to join the xAPI vocabulary group. 
+
+Now here we at coding level and common practice consist in encapsulating what causes us to think to much, what is likely to change often in centralized functions. 
+
+Don't be afraid to give long names to functions. It makes clear once for all what they achieve and increase readibility of sources.
+
+function GetDisplayLabelFromVerb( verb);
+function GetDisplayLabelFromActivity( activity);
+function GetDisplayLabelFromActor( actor);
+
+No need to pass the complete statement since *normally* each constituent is uniquely defined by its record. 
+
+Similarly we will need to extract a string used as identifier when we will aggregate results. This string is for computing only and we don't even need to know what is in it.
+
+function GetIdFromVerb( verb);
+function GetIdFromActivity( activity);
+function GetIdFromActor( actor);
+
+All the functions will be placed in a new module in lib/xAPIAdapter.js and passed to pages via the GlobalData object.
+
+To export functions from the module it's sufficient to assign them to exports.
+To get a module into another we use 'require'.
+
+In javascript functions are objects like others. 
+
+between two equivalent syntax the second is easier to maintain although it can appear as disconcerting at first view
+
+A) Old style
+// create a function in module space
+function GetIdFromActor( actor)
+{
+}
+
+// export it
+exports.GetIdFromActor = GetIdFromActor;
+
+B) Modern style
+// create a function directly in exports
+exports.GetIdFromActor = function( actor)
+{
+}
+
+see compete code in lib/xAPIAdapter.js
+
+I commented the column context wchih can be voluminous and not very self explainable
+
+It doesn't look great yet but this is for Step 6
+

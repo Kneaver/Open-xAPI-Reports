@@ -87,12 +87,21 @@ function syntaxHighlight( statement) {
 }
 // End Step 3
 
+// Step 5
+var xAPIAdapter = require( './lib/xAPIAdapter');
+// End Step 5
+
 // Step 2
 var GlobalData =   {
     "dirname" : path.join( __dirname, "pages"),
     "AppName" : package.name,
     "title" : package.name,
+    // Step 5
+    "xAPIAdapter" : xAPIAdapter,
+    // End Step 5
+    // Step 3
     "syntaxHighlight" : syntaxHighlight
+    // End Step 3
   };
 // End Step 2
 

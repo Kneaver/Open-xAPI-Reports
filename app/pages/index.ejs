@@ -18,22 +18,28 @@ Verb
 <td>
 Object
 </td>
+<% if (false) { %>
 <td>
 Context
 </td>
+<% } %>
 </thead>
 <% for (i = 0; i < Statements.length; i++) { 
      var Statement = Statements[ i];
-     var ActivityName = Statement.object.definition.name?Statement.object.definition.name[ "en-US"]:syntaxHighlight( Statement.object.definition);
+     var ActorName = xAPIAdapter.GetDisplayLabelFromActor( Statement.actor);
+     var VerbName = xAPIAdapter.GetDisplayLabelFromVerb( Statement.verb);
+     var ActivityName = xAPIAdapter.GetDisplayLabelFromActivity( Statement.object);
 %>
 <tr>
 <td><%=Statement.timestamp%></td>
-<td><%=Statement.actor.name%></td>
-<td><%=Statement.verb.display[ "en-US"]%></td>
+<td><%=ActorName%></td>
+<td><%=VerbName%></td>
 <td><%-ActivityName%></td>
+<% if (false) { %>
 <td>
   <pre><code><%- syntaxHighlight( Statement.context) %></code></pre>
 </td>
+<% } %>
 </tr>
 <% } %>
 </table>
