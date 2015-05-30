@@ -208,7 +208,99 @@ Statement
 
 Next step we split statements in columns
 
+Step 4 break into statements
 
+Basically a statement as the following parts, let's break them in columns. 
 
-
+    "timestamp": "2015-05-30T14:09:30+0000",
     
+    Use it as date, use moment.js for nicer display
+    
+    "actor": {
+        "objectType": "Agent",
+        "name": "XXXXXXXXX",
+        "account": {
+            "name": "c0916254-0314-4800-a603-8bac1c66f18a",
+            "homePage": "http://beta.curatr3.com"
+        }
+    },
+    
+    For actor we will display actor.name
+    
+    "verb": {
+        "id": "http://adlnet.gov/expapi/verbs/commented",
+        "display": {
+            "en-US": "commented",
+            "en-GB": "commented"
+        }
+    },
+    For verb we will display verb.display[ "en-US"]
+
+    "object": {
+        "objectType": "Activity",
+        "id": "http://beta.curatr3.com/courses/xapi/home#object/11939/comment/58983",
+        "definition": {
+            "type": "http://activitystrea.ms/schema/1.0/comment",
+            "name": {
+                "en-US": "comment to xAPI in the Real World",
+                "en-GB": "comment to xAPI in the Real World"
+            }
+        }
+    },
+    For object we will display object.definition.name[ "en-US"]
+    
+    "result": {
+        "response": "These examples ...."
+    },
+
+"context": can be very interesting but also will vary a lot and it long to display
+    
+but also attributes technically important but less usefull for reporting
+"version": "1.0.0",
+"authority": {
+    "stored": "2015-05-30T14:09:32.332400+00:00",
+    "id": "5fa33eff-58d5-412d-a3b9-f76c223c855d"
+}
+
+we got
+
+<table>
+<thead>
+<td>
+Timestamp
+</td>
+<td>
+Name
+</td>
+<td>
+Verb
+</td>
+<td>
+Object
+</td>
+<td>
+Context
+</td>
+</thead>
+<% for (i = 0; i < Statements.length; i++) { 
+     var Statement = Statements[ i];
+%>
+<tr>
+<td><%=Statement.timestamp%></td>
+<td><%=Statement.actor.name%></td>
+<td><%=Statement.verb.display[ "en-US"]%></td>
+<td><%-Statement.object.definition.name[ "en-US"]%></td>
+<td>
+  <pre><code><%- syntaxHighlight( Statement.context) %></code></pre>
+</td>
+</tr>
+<% } %>
+</table>
+    
+The problem is that it breaks! Why? because xAPI don't make locale strings compulsory. So to find a significant display we need to trick.
+
+let's use the trick below on object and see how to fix it in Step 5
+     var ActivityName = Statement.object.definition.name?Statement.object.definition.name[ "en-US"]:syntaxHighlight( Statement.object.definition);
+
+<td><%-ActivityName%></td>
+

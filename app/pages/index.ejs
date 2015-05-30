@@ -7,15 +7,32 @@ We have statements!
 <table>
 <thead>
 <td>
-Statement
+Timestamp
+</td>
+<td>
+Name
+</td>
+<td>
+Verb
+</td>
+<td>
+Object
+</td>
+<td>
+Context
 </td>
 </thead>
 <% for (i = 0; i < Statements.length; i++) { 
-     Statement = Statements[ i];
+     var Statement = Statements[ i];
+     var ActivityName = Statement.object.definition.name?Statement.object.definition.name[ "en-US"]:syntaxHighlight( Statement.object.definition);
 %>
 <tr>
+<td><%=Statement.timestamp%></td>
+<td><%=Statement.actor.name%></td>
+<td><%=Statement.verb.display[ "en-US"]%></td>
+<td><%-ActivityName%></td>
 <td>
-  <pre><code><%- syntaxHighlight( Statement) %></code></pre>
+  <pre><code><%- syntaxHighlight( Statement.context) %></code></pre>
 </td>
 </tr>
 <% } %>
