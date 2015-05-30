@@ -411,3 +411,28 @@ OK dates now properly displayed: "Today  8:22 PM, 32 minutes ago"
 OK title properly displayed
 
 Now first deployement on http://xapi-reports.kneaver.com/ 
+
+---
+Step 7
+
+added empty about and contacts pages, updated links
+added attendance.ejs page
+copied into it a sample of grah using d3.js
+wrote a function to build a sample of data : number of statements per hour
+debug some issues with dates
+
+added dropdown menus copied from http://getbootstrap.com/examples/navbar/
+
+OK next step will be to be more creative in reports and how to compute them
+
+Any suggestions?
+
+
+---
+TODO:
+- update about.ejs
+- update contact.ejs
+- add LRS parameters
+- graphics
+- refresh cash of xAPI query
+- keep data in session

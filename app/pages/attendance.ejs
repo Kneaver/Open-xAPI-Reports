@@ -1,0 +1,109 @@
+<% block('title', title ) -%>
+<% layout('../views/layout') -%>
+<p>Welcome to <a href="https://github.com/Kneaver/Open-xAPI-Reports"><%= title %> Click to learn more</a></p>
+<% if ( Statements) { %>
+We have statements!
+    <div class="KNVTabZone">
+    <figure id="StatItemsCreated" style="width: 100%; height: 150px;" ></figure><p>- Statements per hour -</p>
+    <style>
+    .ex-tooltip
+      {
+        position:absolute;
+        background:#EEE;
+        -webkit-border-radius:3px;
+        -moz-border-radius:3px;
+        -ms-border-radius:3px;
+        -o-border-radius:3px;
+        border-radius:3px;
+        padding:5px;
+        -webkit-box-shadow:0 1px 3px #000;
+        -moz-box-shadow:0 1px 3px #000;
+        -ms-box-shadow:0 1px 3px #000;
+        -o-box-shadow:0 1px 3px #000;
+        box-shadow:0 1px 3px #000;
+        border-collapse:separate;
+        display:none
+        }
+    </style>
+    <script>
+    (function () {
+      var tt = document.createElement('div'),
+          leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
+          topOffset = -32;
+      tt.className = 'ex-tooltip';
+      document.body.appendChild(tt);
+      <%
+      function LoadData( Statements, Field)
+      {
+          var Now = new Date();
+          var Vals = [];
+          for (i = 0; i < Statements.length; i++) 
+          {
+            var Statement = Statements[ i];
+            var StatementTime = new Date( Statement.timestamp);
+            var ActorName = xAPIAdapter.GetDisplayLabelFromActor( Statement.actor);
+            var VerbName = xAPIAdapter.GetDisplayLabelFromVerb( Statement.verb);
+            var ActivityName = xAPIAdapter.GetDisplayLabelFromActivity( Statement.object);
+            var TimeRange = Math.floor( (Now.getTime() - StatementTime.getTime())/ KNVDateFct.OneHour)
+            if ( Vals[ TimeRange])
+              Vals[ TimeRange]++
+            else
+              Vals[ TimeRange] = 1;
+          }
+          var dataset = { 
+              "className" : "." + Field, 
+              "data" : []
+              };
+          var data_sample = dataset.data;
+          for (i = 0; i < Vals.length; i++)
+          {
+            var Time = new Date( Now.getTime() + i * KNVDateFct.OneHour);
+            var TimeStr = String(Time.getFullYear()) + "-" + String(Time.getMonth() + 1) + "-" + String( Time.getDate()) + ":" + String( Time.getHours());
+            if ( Vals[ i])
+              data_sample.push( { "x" : TimeStr, "y" : Vals[ i]});
+            else
+              data_sample.push( { "x" : TimeStr, "y" : 0});
+          }
+          return dataset;
+      }
+      %>
+      
+      var data = {
+          "xScale": "ordinal",
+          "yScale": "linear",
+          "main": [
+              <%- JSON.stringify( LoadData( Statements, "Statements"))%>
+          ]
+      };
+      var data2 = {
+          "xScale": "ordinal",
+          "yScale": "linear",
+          "main": [
+              <%- JSON.stringify( LoadData( Statements, "Learners"))%>
+          ]
+      };
+      
+      var opts = {
+          "dataFormatX": function (x) { return d3.time.format('%Y-%m-%d:%H').parse(x); },
+          // https://github.com/mbostock/d3/wiki/Time-Formatting
+          "tickFormatX": function (x) { return d3.time.format('%e/%m:%H')(x); },
+          "mouseover": function (d, i) {
+            var pos = $(this).offset();
+            $(tt).text(d3.time.format('%x')(d.x) + ': ' + d.y)
+              .css({top: topOffset + pos.top, left: pos.left + leftOffset})
+              .show();
+          },
+          "mouseout": function (x) {
+            $(tt).hide();
+          },
+          axisPaddingTop : 10,
+          axisPaddingRight : 20
+        };
+      
+      var myChart = new xChart('line-dotted', data, '#StatItemsCreated', opts);     
+      // <figure id="StatLinksCreated" style="width: 100%; height: 150px;" ></figure><p>Links created</p>
+      // var myChart2 = new xChart('line-dotted', data2, '#StatLinksCreated', opts);     
+    }());
+    </script>
+</div>
+<% } %>
