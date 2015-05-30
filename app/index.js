@@ -55,13 +55,16 @@ app.set( 'views', path.join( __dirname, 'views'));
 app.set( 'view engine', 'ejs');
 app.engine( 'ejs', ejsLocals);
 
-// EJSPages are after routes
-var EJSPages = require( './lib/KNVEJSPages');
-app.use( EJSPages( app, 
-  {
+// Step 2
+var GlobalData =   {
     "dirname" : path.join( __dirname, "pages"),
     "title" : package.name
-  }
+  };
+// End Step 2
+
+// EJSPages are after routes
+var EJSPages = require( './lib/KNVEJSPages');
+app.use( EJSPages( app, GlobalData
 ));
 // End Step1
 
@@ -122,6 +125,29 @@ if (require.main == module) {
       };
     }
     const port = commander.port || config( 'PORT', 3000);
+
+    // Step 2
+    GlobalData.LRSEndPoint = commander.lrsEndpoint || config( 'LRSEndPoint', "nope");
+    GlobalData.LRSUser = commander.lrsUser || config( 'LRSUser', "");
+    GlobalData.LRSPwd = commander.lrsPwd || config( 'LRSPwd', "");
+    
+    // as documented on https://github.com/adlnet/xapiwrapper-node
+    var adl = require('adl-xapiwrapper');
+    var opts = {
+        "url": GlobalData.LRSEndPoint,
+        "auth":{
+            "user": GlobalData.LRSUser,
+            "pass": GlobalData.LRSPwd
+        },
+    };
+    var mylrs = new adl.XAPIWrapper(opts);
+    GlobalData.xAPI = mylrs;
+    GlobalData.xAPI.getStatements(null, null, function(err, resp, bdy) {
+        GlobalData.Statements = JSON.parse(bdy);
+        console.log(resp.statusCode);
+        // console.log( GlobalData.Statements);
+    });
+    // End Step 2
 
     app.listen(port, function(err) {
       if (err) {
