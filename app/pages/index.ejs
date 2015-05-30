@@ -1,46 +1,87 @@
-<% block('title', "Title" ) -%>
+<% block('title', title ) -%>
 <% layout('../views/layout') -%>
-<h1><%= title %></h1>
-<p>Welcome to <%= title %></p>
+<p>Welcome to <a href="https://github.com/Kneaver/Open-xAPI-Reports"><%= title %> Click to learn more</a></p>
 <% if ( Statements) { %>
 We have statements!
-<table>
-<thead>
-<td>
-Timestamp
-</td>
-<td>
-Name
-</td>
-<td>
-Verb
-</td>
-<td>
-Object
-</td>
-<% if (false) { %>
-<td>
-Context
-</td>
-<% } %>
-</thead>
-<% for (i = 0; i < Statements.length; i++) { 
-     var Statement = Statements[ i];
-     var ActorName = xAPIAdapter.GetDisplayLabelFromActor( Statement.actor);
-     var VerbName = xAPIAdapter.GetDisplayLabelFromVerb( Statement.verb);
-     var ActivityName = xAPIAdapter.GetDisplayLabelFromActivity( Statement.object);
-%>
-<tr>
-<td><%=Statement.timestamp%></td>
-<td><%=ActorName%></td>
-<td><%=VerbName%></td>
-<td><%-ActivityName%></td>
-<% if (false) { %>
-<td>
-  <pre><code><%- syntaxHighlight( Statement.context) %></code></pre>
-</td>
-<% } %>
-</tr>
-<% } %>
+<style type="text/css">
+  th
+  {
+    text-align: center;
+  }
+  th[data-sort]{
+    cursor:pointer;
+  }
+</style>
+Hint: Click on column header to sort, click on date to add to your agenda, click on hashtag and hosts to go to twitter.
+<table  class="table table-striped tablesorter stupidtable" id="Report1">
+  <thead>
+    <th data-sort="int" data-sort-default="desc">
+    Timestamp
+    </th>
+    <th data-sort="string" >
+    Name
+    </th>
+    <th data-sort="string" >
+    Verb
+    </th>
+    <th data-sort="string" >
+    Object
+    </th>
+    <% if (false) { %>
+    <th>
+    Context
+    </th>
+    <% } %>
+  </thead>
+  <% for (i = 0; i < Statements.length; i++) { 
+       var Statement = Statements[ i];
+       var StatementTime = new Date( Statement.timestamp);
+       var ActorName = xAPIAdapter.GetDisplayLabelFromActor( Statement.actor);
+       var VerbName = xAPIAdapter.GetDisplayLabelFromVerb( Statement.verb);
+       var ActivityName = xAPIAdapter.GetDisplayLabelFromActivity( Statement.object);
+  %>
+  <tr>
+    <td data-sort-value="<%=StatementTime.getTime()/KNVDateFct.OneSecond%>"><time data-format="DocWriteLocalDate" datetime="<%=StatementTime.toISOString()%>" ><%=KNVDateFct.FormatDateTime( StatementTime,1)%>&nbsp;<%=KNVDateFct.FormatDateTime( StatementTime,3)%></time>, <time data-format="" data-livestamp="<%=String(StatementTime.getTime()/KNVDateFct.OneSecond)%>" class="time"></time></td>
+    <td><%=ActorName%></td>
+    <td><%=VerbName%></td>
+    <td><%-ActivityName%></td>
+    <% if (false) { %>
+    <td>
+      <pre><code><%- syntaxHighlight( Statement.context) %></code></pre>
+    </td>
+    <% } %>
+  </tr>
+  <% } %>
 </table>
+<script type="text/javascript"><!--//--><![CDATA[//><!--
+// sort table by default by time descending
+jQuery().ready(function()
+{ 
+    jQuery(".stupidtable").stupidtable();
+    var table = jQuery("#Report1").stupidtable();
+    //jQuery(table).find("th").eq(0).click();  // Use the index of the the you want in place of 0, ugly but works
+});
+// better dispaly of dates depending on user time zone
+jQuery(function () {
+    jQuery("time[data-format]").each(function () {
+        var el = jQuery(this);
+        var val = el.attr("datetime");
+        var format = el.data("format");
+        var d = new Date( val);
+        if ( format == "DocWriteLocalDateDayOnly")
+            el.html( DocWriteLocalDateDayOnly(d) );
+        else
+        if ( format == "DocWriteLocalDate")
+            el.html( DocWriteLocalDateDayOnly( d) + DocWriteLocalHourInDay( d) );
+        else
+        {
+            var dt = moment( val);
+            el.html(dt.format( format));
+        }
+    });
+});
+//--><!]]></script>
+<script src="assets/js/moment.js"></script>
+<script src="assets/js/moment.twitter/main.js"></script>
+<script src="assets/js/livestamp.js"></script>
 <% } %>

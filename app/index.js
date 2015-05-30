@@ -99,8 +99,12 @@ var GlobalData =   {
     // Step 5
     "xAPIAdapter" : xAPIAdapter,
     // End Step 5
+    // Step 6
+    "KNVDateFct" : require( "./public/js/KNVDateFct"),
+    // End Step 6
     // Step 3
     "syntaxHighlight" : syntaxHighlight
+    
     // End Step 3
   };
 // End Step 2

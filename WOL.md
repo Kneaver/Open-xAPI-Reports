@@ -55,7 +55,7 @@ cd ..
 
 Add xAPI access library
 
-npm install -s adl-xapiwrapper
+npm install -save adl-xapiwrapper
 
 copied app/lib/config.js from "openbadges-badgekit" all settings documentation will not apply to both projects
 
@@ -70,13 +70,15 @@ Completed package.json wich is really the machine readable definition of the pro
 
 added commander for easy command line options
 
-npm install -s commander
+npm install -save commander
 
 added ejs-locals for easy layouts
 
-npm install -s ejs-locals
+npm install -save ejs-locals
 
 added Q the promise library because it is a dependency of KNVEJSpages
+
+npm install -save q
 
 copied KNVEJSPages the simplied router ala PHP/JSP used in Kneaver
 
@@ -356,3 +358,56 @@ I commented the column context wchih can be voluminous and not very self explain
 
 It doesn't look great yet but this is for Step 6
 
+---
+
+Step 6 : adding style and interactivity to the table
+
+we add classes for bootstrap styles and stupidtable plugins
+
+<table  class="table table-striped tablesorter stupidtable" id="Report1">
+
+Time descending
+    <td data-sort-default="desc">
+
+Use KNVDateFct for Statement.timestamp display
+
+Call Moment on dates
+    jQuery(function () {
+        jQuery("time[data-format]").each(function () {
+            var el = jQuery(this);
+            var val = el.attr("datetime");
+            var format = el.data("format");
+            var d = new Date( val);
+            if ( format == "DocWriteLocalDateDayOnly")
+                el.html( DocWriteLocalDateDayOnly(d) );
+            else
+            if ( format == "DocWriteLocalDate")
+                el.html( DocWriteLocalDateDayOnly( d) + DocWriteLocalHourInDay( d) );
+            else
+            {
+                var dt = moment( val);
+                el.html(dt.format( format));
+            }
+        });
+    });
+
+Added app/public/js/KNVDateFct.js will be open sourced later on its own
+this module will be used server side or client side
+Tests
+
+1. Don't understand with stupidtable don't work
+I used td for thead cells, instead of th, replacing with th now
+
+2. No, only I forgot also to add the data-sort="int" to each th
+OK now it works, we can sort the table
+
+3. date still not working properly. Forgot data-format="" 
+
+renamed public/javascripts into public/js
+renamed public/stylesheets into public/css
+
+OK dates now properly displayed: "Today  8:22 PM, 32 minutes ago"
+
+OK title properly displayed
+
+Now first deployement on http://xapi-reports.kneaver.com/ 
