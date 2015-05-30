@@ -1,0 +1,45 @@
+{
+  "name": "Open-xAPI-Reporting",
+  "main": "app.js",
+  "version": "0.0.0",
+  "authors": [
+    "Bruno Winck",
+    "Kneaver <bwmgithub@kneaver.com>"
+  ],
+  "license": "MIT",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.1.1",
+    "jquery-migrate": "*",
+    "jquery.cookie": "~1.4.0",
+    "jquery.hotkeys": "*",
+    "Font-Awesome": "4.1.0",
+    "bootstrap": "3.3.4",
+    "Stupid-Table-Plugin": "git://github.com/joequery/Stupid-Table-Plugin",
+    "livestampjs": "1.1.2",
+    "moment.twitter": "0.1.2",
+    "underscore": "1.6.0",
+    "moment": "2.6.0",
+    "typeahead.js": "*",
+    "d3": "~3.4.8",
+    "d3-parsets": "jasondavies/d3-parsets#~1.2.4",
+    "d3-cloud": "jasondavies/d3-cloud#~1.0.5",
+    "xcharts": "tenXer/xcharts",
+    "xcharts-build.tar": "http://tenxer.github.io/xcharts/xcharts-build.tar.gz",
+    "bootstrap-autohidingnavbar": "*",
+    "jscroll": "git://github.com/pklauzinski/jscroll",
+    "hopscotch": "~0.2.2",
+    "masonry": "~3.1.5",
+    "imagesloaded": "~3.1.8",
+    "jquery.scrollTo": "~2.1.0",
+    "bootstrap-tagsinput": "~0.4.2",
+    "jquery.gmap": "~3.3.3"
+  }
+}

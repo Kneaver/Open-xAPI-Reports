@@ -1,0 +1,41 @@
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+lib-cov
+*.csv
+*.dat
+*.out
+*.gz
+results
+
+# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directory
+# Deployed apps should consider commenting this line out:
+# see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
+node_modules
+npm-debug.log
+
+# Kneaver Corp Files
+*.bat
+*.spec
+*.rsdep
+*.oriirs
+Open-xAPI-LRS.txt
+
+/.env
+.test-env
+
+*.local
+
+config.env
+config.json
