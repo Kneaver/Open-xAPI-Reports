@@ -137,6 +137,78 @@ ejs files are basically HTML5 with code injection. Plain code is injected using 
 
 we are done for Step 2, Step 3 will be a nicer display
 
+---
+
+Step 3 nicer table display of statements
+
+we deal basically with pages/index.ejs
+but first we will install a layout page to have all pages with a common setup
+
+I'm copying the views/layout.ejs from chatdir.kneaver.comm 
+Nothing very smart, just boilerplate bootstrap code
+And I replace "Kneaver" with <%=AppName%>
+
+then in pages/index.js I simplify a lot by removing all the boilerplate HTML
+OK suddenly the apparence becomes much more interesting. We gained a top menu, responsive design, fonts, icons etc..
+
+Since we are in such a good way let's add the libraries for charting to layout.ejs
+
+<link rel="stylesheet" href="/assets/css/xcharts.css" />
+<script src="/assets/js/d3.min.js"></script>
+<script src="/assets/js/xcharts.js"></script>
+
+This will be to display raw statements
+  <pre><code><%= JSON.stringify( Statements) %></code></pre>
+
+We add a fct syntaxHighlight to beautify JSON text and statements in particular
+and we add to layout.ejs some styles to have a nicer display of statements
+
+<style>
+  pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; text-align:left; }
+  .string { color: green; }
+  .number { color: darkorange; }
+  .boolean { color: blue; }
+  .null { color: magenta; }
+  .key { color: red; }
+</style>
+
+so this the better way to have a nice display
+  <pre><code><%- syntaxHighlight( Statements) %></code></pre>
+
+we can do much better by using tables
+
+First let's do a for loop in statements
+
+<% for (i = 0; i < Statements.length; i++) { 
+     Statement = Statements[ i];
+%>
+  <pre><code><%- syntaxHighlight( Statement) %></code></pre>
+<% } %>
+
+this will display each statement on its own
+
+Next we use an HTML table, with oe column and one row per statement
+
+<table>
+<thead>
+<td>
+Statement
+</td>
+</thead>
+<% for (i = 0; i < Statements.length; i++) { 
+     Statement = Statements[ i];
+%>
+<tr>
+<td>
+  <pre><code><%- syntaxHighlight( Statement) %></code></pre>
+</td>
+</tr>
+<% } %>
+</table>
+
+Next step we split statements in columns
+
+
 
 
     

@@ -1,15 +1,23 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <% if ( Statements) { %>
-    We have statements!
-        <%= JSON.stringify( Statements) %>
-    <% } %>
-  </body>
-</html>
+<% block('title', "Title" ) -%>
+<% layout('../views/layout') -%>
+<h1><%= title %></h1>
+<p>Welcome to <%= title %></p>
+<% if ( Statements) { %>
+We have statements!
+<table>
+<thead>
+<td>
+Statement
+</td>
+</thead>
+<% for (i = 0; i < Statements.length; i++) { 
+     Statement = Statements[ i];
+%>
+<tr>
+<td>
+  <pre><code><%- syntaxHighlight( Statement) %></code></pre>
+</td>
+</tr>
+<% } %>
+</table>
+<% } %>

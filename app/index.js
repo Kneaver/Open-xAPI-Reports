@@ -55,10 +55,44 @@ app.set( 'views', path.join( __dirname, 'views'));
 app.set( 'view engine', 'ejs');
 app.engine( 'ejs', ejsLocals);
 
+// Step 3
+function syntaxHighlight( statement) {
+  var json = JSON.stringify( statement, undefined, 4);
+  json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  json = json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+      var cls = 'number';
+      if (/^"/.test(match)) {
+	  if (/:$/.test(match)) {
+	      cls = 'key';
+	  } else {
+	      cls = 'string';
+	  }
+      } else if (/true|false/.test(match)) {
+	  cls = 'boolean';
+      } else if (/null/.test(match)) {
+	  cls = 'null';
+      }
+      return '<span class="' + cls + '">' + match + '</span>';
+  });
+  // http://stackoverflow.com/questions/8188645/javascript-regex-to-match-a-url-in-a-field-of-text
+  var urlpattern = /((http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?)/g
+//  var urlpattern = /(http|ftp|https)://[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?/g;
+  json = json.replace( urlpattern, function (str, group1) 
+	{
+//		var url = URLRelocate(group1);
+		var url = group1;
+		return '<a href="' + url + '">' + group1 + '</a>';
+	});
+  return json;
+}
+// End Step 3
+
 // Step 2
 var GlobalData =   {
     "dirname" : path.join( __dirname, "pages"),
-    "title" : package.name
+    "AppName" : package.name,
+    "title" : package.name,
+    "syntaxHighlight" : syntaxHighlight
   };
 // End Step 2
 
@@ -143,7 +177,7 @@ if (require.main == module) {
     var mylrs = new adl.XAPIWrapper(opts);
     GlobalData.xAPI = mylrs;
     GlobalData.xAPI.getStatements(null, null, function(err, resp, bdy) {
-        GlobalData.Statements = JSON.parse(bdy);
+        GlobalData.Statements = JSON.parse(bdy).statements;
         console.log(resp.statusCode);
         // console.log( GlobalData.Statements);
     });
